@@ -8,8 +8,5 @@ pragma AbiHeader expire;
 
 interface InterfaceGameObject {
 
-    function getAttacked() external;
-    function getDefense() external view returns (uint);
-    function getAttack() external view returns (uint);
-    function getCurrentHealth() external view returns (uint);
+    function getAttacked(uint attackerDamage) external;
 }

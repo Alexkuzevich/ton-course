@@ -15,6 +15,7 @@
 		{
 			"name": "getAttacked",
 			"inputs": [
+				{"name":"attackerDamage","type":"uint256"}
 			],
 			"outputs": [
 			]
@@ -58,6 +59,14 @@
 			],
 			"outputs": [
 			]
+		},
+		{
+			"name": "ownerKey",
+			"inputs": [
+			],
+			"outputs": [
+				{"name":"ownerKey","type":"uint256"}
+			]
 		}
 	],
 	"data": [
@@ -69,6 +78,7 @@
 		{"name":"_timestamp","type":"uint64"},
 		{"name":"_constructorFlag","type":"bool"},
 		{"components":[{"name":"defense","type":"uint256"},{"name":"attack","type":"uint256"},{"name":"health","type":"uint256"}],"name":"unit","type":"tuple"},
-		{"name":"ownerAddress","type":"address"}
+		{"name":"ownerAddress","type":"address"},
+		{"name":"ownerKey","type":"uint256"}
 	]
 }

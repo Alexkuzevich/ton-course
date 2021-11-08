@@ -7,8 +7,9 @@ pragma ton-solidity >= 0.35.0;
 pragma AbiHeader expire;
 
 import 'InterfaceGameObject.sol';
+import 'GameObject.sol';
 
-contract BaseStation is InterfaceGameObject{
+contract BaseStation is GameObject{
 
     uint private unitDefense;
     uint private unitAttack;
@@ -21,13 +22,6 @@ contract BaseStation is InterfaceGameObject{
         require(msg.pubkey() == tvm.pubkey(), 102);
         tvm.accept();
     }
-
-    modifier checkOwnerAndAccept {
-        require(tvm.pubkey() != 0, 101);
-        require(msg.pubkey() == tvm.pubkey(), 102);
-		tvm.accept();
-		_;
-	}
 
     // Добавить юнит
     function addUnit(address unit) virtual public {
@@ -48,14 +42,6 @@ contract BaseStation is InterfaceGameObject{
         for((address unit, bool status) : stationUnits){
             return stationUnits;
         }
-    }
-
-    // Получить атаку
-    function getAttacked() virtual external override{
-        require(unitHealth > 0, 103);
-        tvm.accept();
-        ownerAddress = msg.sender;
-        unitHealth -= (unitAttack - unitDefense);
     }
 
     // Получить силу защиты
@@ -86,7 +72,7 @@ contract BaseStation is InterfaceGameObject{
     }
 
     // Отправка всех денег по адресу и уничтожение
-    function sendAllAndDelete(address dest) public pure checkOwnerAndAccept {
+    function sendAllAndDelete(address dest) public pure override checkOwnerAndAccept {
         tvm.accept();
         dest.transfer(1, false, 160);
     }

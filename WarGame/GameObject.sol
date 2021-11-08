@@ -18,12 +18,14 @@ contract GameObject is InterfaceGameObject {
     }
     unitStats unit;
     address private ownerAddress;
+    uint public ownerKey;
 
     constructor(uint defense, uint attack) public {
         require(tvm.pubkey() != 0, 101);
         require(msg.pubkey() == tvm.pubkey(), 102);
         tvm.accept();
         ownerAddress = msg.sender;
+        ownerKey = msg.pubkey();
 
         uint def = defense;
         uint atk = attack;
@@ -41,27 +43,28 @@ contract GameObject is InterfaceGameObject {
 	}
 
     // Получить атаку
-    function getAttacked() virtual external override{
+    function getAttacked(uint attackerDamage) virtual external override{
         require(unit.health > 0, 103);
         tvm.accept();
-        ownerAddress = msg.sender;
-        unit.health -= (unit.attack - unit.defense);
+        address attacker = msg.sender;
+        unit.health -= (attackerDamage - unit.defense);
+        deathCase(attacker);
     }
 
     // Получить силу защиты
-    function getDefense() virtual public view override returns (uint){
+    function getDefense() virtual public view returns (uint){
         tvm.accept();
         return unit.defense;
     }
     
     // Получить силу атаки
-    function getAttack() virtual public view override returns (uint){
+    function getAttack() virtual public view returns (uint){
         tvm.accept();
         return unit.attack;
     }
 
     // Получить текущее здоровье
-    function getCurrentHealth() virtual public view override returns (uint){
+    function getCurrentHealth() virtual public view returns (uint){
         tvm.accept();
         return unit.health;
     }
@@ -75,7 +78,7 @@ contract GameObject is InterfaceGameObject {
     }
     
     // Отправка всех денег по адресу и уничтожение
-    function sendAllAndDelete(address dest) public pure checkOwnerAndAccept {
+    function sendAllAndDelete(address dest) virtual public pure checkOwnerAndAccept {
         tvm.accept();
         dest.transfer(1, false, 160);
     }
